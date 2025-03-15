@@ -1,86 +1,56 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { IoMdSearch } from "react-icons/io";
 import { FaCartShopping } from "react-icons/fa6";
-import { FaCaretDown } from "react-icons/fa";
-import DarkMode from "./DarkMode";
 import { FiShoppingBag } from "react-icons/fi";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { IoMdClose } from "react-icons/io";
+import DarkMode from "./DarkMode";
 
 const Menu = [
-  {
-    id: 1,
-    name: "Home",
-    link: "/#",
-  },
-  {
-    id: 2,
-    name: "Top Rated",
-    link: "/#services",
-  },
-  {
-    id: 3,
-    name: "Kids Wear",
-    link: "/#",
-  },
-  {
-    id: 3,
-    name: "Mens Wear",
-    link: "/#",
-  },
-  {
-    id: 3,
-    name: "Electronics",
-    link: "/#",
-  },
-];
-
-const DropdownLinks = [
-  {
-    id: 1,
-    name: "Trending Products",
-    link: "/#",
-  },
-  {
-    id: 2,
-    name: "Best Selling",
-    link: "/#",
-  },
-  {
-    id: 3,
-    name: "Top Rated",
-    link: "/#",
-  },
+  { id: 1, name: "Home", link: "/" },
+  { id: 2, name: "Top Rated", link: "/top-rated" },
+  { id: 3, name: "Kids Wear", link: "/kids" },
+  { id: 4, name: "Mens Wear", link: "/men-wear" },
+  { id: 5, name: "Electronics", link: "/electronics" },
 ];
 
 const Navbar = ({ handleOrderPopup }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
-    <div className="shadow-md bg-white dark:bg-slate-800 dark:text-white duration-200 relative z-40">
-      {/* upper Navbar */}
+    <nav className="shadow-md bg-white dark:bg-slate-800 dark:text-white duration-200 relative z-40">
+      {/* Upper Navbar */}
       <div className="bg-primary/40 py-2">
         <div className="container flex justify-between items-center">
+          {/* Logo */}
           <div>
-            <a href="#" className="font-bold text-xl items-center flex gap-1">
+            <Link to="/" className="font-bold text-xl flex gap-1 items-center">
               <FiShoppingBag size="30" />
               ShopMe
-            </a>
+            </Link>
           </div>
 
-          {/* search bar */}
-          <div className="flex justify-between items-center gap-4">
-            <div className="relative group hidden sm:block">
+          {/* Desktop Search & Buttons */}
+          <div className="hidden sm:flex items-center gap-4">
+            {/* Search Bar */}
+            <div className="relative group flex items-center">
               <input
                 type="text"
-                placeholder="Search"
-                className="w-[200px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-lg border border-gray-300 py-1 px-2
-                text-sm focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-slate-800 "
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-lg border border-gray-300 py-1 px-2 text-sm focus:outline-none focus:border-primary dark:border-gray-500 dark:bg-slate-800 dark:text-white"
               />
-              <IoMdSearch className="text-slate-800 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" />
+              <IoMdSearch className="text-gray-700 dark:text-white group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" />
             </div>
 
-            {/* order button */}
+            {/* Order Button */}
             <button
-              onClick={() => handleOrderPopup()}
-              className="bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white  py-1 px-4 rounded-full flex items-center gap-3 group"
+              onClick={handleOrderPopup}
+              className="bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white py-1 px-4 rounded-full flex items-center gap-3 group"
             >
               <span className="group-hover:block hidden transition-all duration-200">
                 Order
@@ -88,52 +58,74 @@ const Navbar = ({ handleOrderPopup }) => {
               <FaCartShopping className="text-xl text-white drop-shadow-sm cursor-pointer" />
             </button>
 
-            {/* Darkmode Switch */}
-            <div>
-              <DarkMode />
-            </div>
+            {/* Dark Mode Switch */}
+            <DarkMode />
+          </div>
+
+          {/* Mobile Menu & Search Button */}
+          <div className="sm:hidden flex items-center gap-3">
+            {/* Search Button */}
+            <button onClick={() => setSearchOpen(!searchOpen)}>
+              <IoMdSearch className="text-2xl" />
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button className="text-2xl" onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? <IoMdClose /> : <GiHamburgerMenu />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Search Bar */}
+        {searchOpen && (
+          <div className="sm:hidden flex justify-center mt-2 px-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full max-w-[300px] rounded-lg border border-gray-300 py-1 px-2 text-sm focus:outline-none focus:border-primary dark:border-gray-500 dark:bg-slate-800 dark:text-white"
+            />
+          </div>
+        )}
       </div>
-      {/* lower Navbar */}
-      <div data-aos="zoom-in" className="flex justify-center">
-        <ul className="sm:flex hidden items-center gap-4">
+
+      {/* Navigation Links - Desktop */}
+      <div data-aos="zoom-in" className="hidden sm:flex justify-center">
+        <ul className="flex items-center gap-4">
           {Menu.map((data) => (
             <li key={data.id}>
-              <a
-                href={data.link}
-                className="inline-block px-4 hover:text-primary duration-200"
+              <Link
+                to={data.link}
+                className="inline-block px-4 hover:text-primary duration-200 cursor-pointer"
               >
                 {data.name}
-              </a>
+              </Link>
             </li>
           ))}
-          {/* Simple Dropdown and Links */}
-          <li className="group relative cursor-pointer">
-            <a href="#" className="flex items-center gap-[2px] py-2">
-              Trending Products
-              <span>
-                <FaCaretDown className="transition-all duration-200 group-hover:rotate-180" />
-              </span>
-            </a>
-            <div className="absolute z-[9999] hidden group-hover:block w-[200px] rounded-md bg-white p-2 text-black shadow-md">
-              <ul>
-                {DropdownLinks.map((data) => (
-                  <li key={data.id}>
-                    <a
-                      href={data.link}
-                      className="inline-block w-full rounded-md p-2 hover:bg-primary/20 "
-                    >
-                      {data.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </li>
         </ul>
       </div>
-    </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`sm:hidden flex flex-col absolute top-full left-0 w-full bg-white dark:bg-slate-800 shadow-md overflow-hidden transition-all duration-300 ${
+          menuOpen ? "max-h-screen py-4" : "max-h-0 py-0"
+        }`}
+      >
+        <ul className="flex flex-col gap-4 items-center">
+          {Menu.map((data) => (
+            <li key={data.id} onClick={() => setMenuOpen(false)}>
+              <Link
+                to={data.link}
+                className="block text-lg font-semibold py-2 hover:text-primary"
+              >
+                {data.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
   );
 };
 

@@ -3,6 +3,7 @@ import Img1 from "../../assets/shirt/shirt.png";
 import Img2 from "../../assets/shirt/shirt2.png";
 import Img3 from "../../assets/shirt/shirt3.png";
 import { FaStar } from "react-icons/fa";
+import { BrowserRouter, Router ,Routes,Route } from "react-router";
 
 const ProductsData = [
   {
@@ -29,9 +30,9 @@ const ProductsData = [
 ];
 const TopProducts = ({ handleOrderPopup }) => {
   return (
+    <span id="top-rated">
     <div>
       <div className="container">
-        {/* Header section */}
         <div className="text-left mb-24">
           <p data-aos="fade-up" className="text-sm text-primary">
             Top Rated Products for you
@@ -84,6 +85,7 @@ const TopProducts = ({ handleOrderPopup }) => {
         </div>
       </div>
     </div>
+    </span>
   );
 };
 
